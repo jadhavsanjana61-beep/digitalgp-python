@@ -2,12 +2,23 @@
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Platform{% endblock %} — DigitalGp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Admin Panel{% endblock %} — DigitalGp</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #eef1f5; color: #222; }
-        header { background: #1a237e; color: white; padding: 18px 24px; }
-        header a { color: white; text-decoration: none; margin-right: 18px; }
-        main { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f6f9; color: #222; display: flex; min-height: 100vh; }
+
+        .sidebar { width: 250px; background: #1a237e; color: #fff; flex-shrink: 0; padding: 18px 0; }
+        .sidebar h1 { font-size: 1.1rem; padding: 0 20px 18px; margin: 0; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar nav a { display: block; padding: 12px 20px; color: #cdd3f0; text-decoration: none; font-size: 0.92rem; }
+        .sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,0.1); color: #fff; }
+        .sidebar nav .section-label { padding: 16px 20px 6px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: .05em; color: #8b93d1; }
+
+        .main-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .topbar { background: #fff; padding: 14px 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; }
+        .topbar .user { font-size: 0.9rem; color: #555; }
+        main { flex: 1; padding: 28px; max-width: 1200px; width: 100%; }
+
         .card { background: white; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
         input[type=text], input[type=email], select { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
         label { display: block; margin-bottom: 4px; font-weight: bold; }
@@ -15,13 +26,54 @@
         table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
         .success { background: #e8f5e9; border: 1px solid #4caf50; padding: 16px; border-radius: 8px; }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 24px; }
+        .stat-card { border-radius: 12px; padding: 22px; color: #fff; }
+        .stat-card .num { font-size: 2rem; font-weight: 700; }
+        .stat-card .lbl { font-size: 0.88rem; opacity: 0.92; margin-top: 4px; }
+        .stat-orange { background: linear-gradient(135deg,#fb8c00,#f4511e); }
+        .stat-green { background: linear-gradient(135deg,#43a047,#2e7d32); }
+        .stat-teal { background: linear-gradient(135deg,#00897b,#00695c); }
+        .stat-blue { background: linear-gradient(135deg,#1e88e5,#1565c0); }
+        .stat-purple { background: linear-gradient(135deg,#8e24aa,#6a1b9a); }
     </style>
 </head>
 <body>
-    <header>
-        <a href="{% url 'platform_gp_list' %}">🏛️ Platform — सर्व गावे</a>
-        <a href="{% url 'platform_register_gp' %}">+ नवीन Gram Panchayat</a>
-    </header>
-    <main>{% block content %}{% endblock %}</main>
+    <aside class="sidebar">
+        <h1>🏛️ DigitalGp Admin Panel</h1>
+        <nav>
+            <a href="{% url 'platform_dashboard' %}">डॅशबोर्ड</a>
+
+            <div class="section-label">ग्रामपंचायत</div>
+            <a href="{% url 'platform_register_gp' %}">ग्रामपंचायत नोंद</a>
+            <a href="{% url 'platform_gp_list' %}">ग्रामपंचायत यादी</a>
+            <a href="/admin/gpsite/subdomaindetail/" target="_blank">सबडोमेन यादी</a>
+            <a href="/admin/gpsite/subdomaindetail/" target="_blank">सबडोमेन अपडेट</a>
+
+            <div class="section-label">Master (सर्व गावांसाठी)</div>
+            <a href="/admin/gpsite/positionmaster/" target="_blank">पोझिशन मास्टर</a>
+            <a href="/admin/gpsite/positioncategorymaster/" target="_blank">पोझिशन कॅटेगरी मास्टर</a>
+            <a href="/admin/gpsite/categorymaster/" target="_blank">Category मास्टर</a>
+            <a href="/admin/gpsite/imagetypemaster/" target="_blank">Image Type मास्टर</a>
+            <a href="/admin/gpsite/leadershipmember/" target="_blank">Leadership Members</a>
+
+            <div class="section-label">सर्व गावांसाठी सामायिक (Global)</div>
+            <a href="/admin/gpsite/shasannirnay/" target="_blank">शासन निर्णय</a>
+            <a href="/admin/gpsite/jababdaribhumika/" target="_blank">जबाबदारी आणि भूमिका</a>
+            <a href="/admin/gpsite/vibhagiyaayukta/" target="_blank">विभागीय आयुक्त</a>
+
+            <div class="section-label">इतर</div>
+            <a href="{% url 'platform_dashboard' %}#summary">Analytics (साइट सारांश)</a>
+            <a href="/admin/" target="_blank">पूर्ण Database (सर्व 43 tables)</a>
+            <a href="{% url 'landing' %}">← मुख्य वेबसाईट</a>
+        </nav>
+    </aside>
+    <div class="main-wrap">
+        <div class="topbar">
+            <strong>{% block pagetitle %}डॅशबोर्ड{% endblock %}</strong>
+            <span class="user">{{ request.user.username }} <a href="/admin/logout/" style="margin-left:12px;">लॉगआऊट</a></span>
+        </div>
+        <main>{% block content %}{% endblock %}</main>
+    </div>
 </body>
 </html>

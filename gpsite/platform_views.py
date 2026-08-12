@@ -83,3 +83,38 @@ def register_gp_view(request):
 def gp_list_view(request):
     registrations = models.Registration.objects.prefetch_related("subdomaindetail_set").order_by("-id")
     return render(request, "platform/gp_list.html", {"registrations": registrations})
+
+
+@login_required(login_url="/admin/login/")
+@is_superuser
+def dashboard_view(request):
+    """
+    Platform superuser's dashboard home -- stat cards mirroring the original
+    AdminDashboard.razor's counters (Total Registrations/Subdomains,
+    Available Templates, per-template registration counts). The original
+    also showed a "Global Traffic Overview" panel sourced from Google
+    Analytics (GA4) -- there are no GA4 credentials for this project, so
+    that's replaced with a real internal "site summary" instead of faking
+    traffic numbers.
+    """
+    total_registrations = models.Registration.objects.count()
+    total_subdomains = models.SubdomainDetail.objects.count()
+    template_counts = [
+        ("Template1", models.Registration.objects.filter(template="Template1").count()),
+        ("Template2", models.Registration.objects.filter(template="Template2").count()),
+        ("Template3", models.Registration.objects.filter(template="Template3").count()),
+    ]
+    site_summary = [
+        ("एकूण तक्रारी (सर्व गावं)", models.Ticket.objects.count()),
+        ("एकूण घोषणा", models.Announcement.objects.count()),
+        ("एकूण छायाचित्रे", models.Gallery.objects.count()),
+        ("एकूण कार्यक्रम", models.EventMaster.objects.count()),
+    ]
+    recent = models.Registration.objects.order_by("-id")[:5]
+    return render(request, "platform/dashboard.html", {
+        "total_registrations": total_registrations,
+        "total_subdomains": total_subdomains,
+        "template_counts": template_counts,
+        "site_summary": site_summary,
+        "recent": recent,
+    })

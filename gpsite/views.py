@@ -646,7 +646,7 @@ def gp_login_view(request):
                         # Superuser with no tenant profile logging in from the
                         # base domain -> there's no single tenant dashboard to
                         # send them to, so land on the platform's own GP list.
-                        return redirect("platform_gp_list")
+                        return redirect("platform_dashboard")
                     subdomain = profile.register.subdomaindetail_set.first()
                     if subdomain:
                         request.session["dev_subdomain"] = subdomain.subdomain

@@ -1,0 +1,56 @@
+{% extends "platform/_base.html" %}
+{% block title %}डॅशबोर्ड{% endblock %}
+{% block pagetitle %}डॅशबोर्ड{% endblock %}
+{% block content %}
+
+<div class="stat-grid">
+    <div class="stat-card stat-orange">
+        <div class="num">{{ total_registrations }} / {{ total_subdomains }}</div>
+        <div class="lbl">एकूण नोंदणी / सबडोमेन</div>
+    </div>
+    <div class="stat-card stat-green">
+        <div class="num">3</div>
+        <div class="lbl">उपलब्ध Templates</div>
+    </div>
+    {% for name, count in template_counts %}
+    <div class="stat-card stat-teal">
+        <div class="num">{{ count }}</div>
+        <div class="lbl">{{ name }} नोंदणी</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card" id="summary">
+    <h3 style="margin-top:0;">साइट सारांश</h3>
+    <p class="text-muted" style="color:#777;font-size:0.85rem;">
+        (मूळ app मध्ये इथे Google Analytics "Global Traffic Overview" होता — त्याचे real credentials उपलब्ध नाहीत,
+        त्यामुळे इथे आपला स्वतःचा खरा data दाखवला आहे, खोटे traffic numbers नाही.)
+    </p>
+    <div class="stat-grid" style="margin-top:16px;margin-bottom:0;">
+        {% for label, count in site_summary %}
+        <div class="stat-card stat-blue">
+            <div class="num">{{ count }}</div>
+            <div class="lbl">{{ label }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-top:0;">अलीकडे नोंदणीकृत गावं</h3>
+    <table>
+        <thead><tr><th>नाव</th><th>तालुका/जिल्हा</th><th>Template</th><th>Subdomain</th></tr></thead>
+        <tbody>
+            {% for gp in recent %}
+            <tr>
+                <td>{{ gp.gram_panchayat_name }}</td>
+                <td>{{ gp.taluka }}, {{ gp.district }}</td>
+                <td>{{ gp.template }}</td>
+                <td>{{ gp.subdomaindetail_set.first.subdomain|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'platform_gp_list' %}" class="btn" style="margin-top:14px;">सर्व गावं बघा →</a>
+</div>
+{% endblock %}
