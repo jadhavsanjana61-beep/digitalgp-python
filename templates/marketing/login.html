@@ -4,40 +4,113 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Login — DigitalGp</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
-    :root { --color-primary: #4C51BF; --color-secondary: #667EEA; }
-    * { box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #312e81 0%, #4C51BF 55%, #667EEA 100%); }
-    .logo-font { font-family: 'Pacifico', cursive; }
-    .card { background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); padding: 40px; width: 100%; max-width: 400px; }
-    .card a.logo { display: block; text-align: center; font-size: 1.8rem; color: var(--color-primary); margin-bottom: 6px; }
-    .card h2 { text-align: center; font-size: 1.3rem; margin: 0 0 26px; color: #1f2937; }
-    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; color: #374151; }
-    input[type=text], input[type=password] { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; margin-bottom: 16px; }
-    input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(76,81,191,0.15); }
-    button { width: 100%; padding: 12px; background: var(--color-primary); color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; }
-    button:hover { background: var(--color-secondary); }
-    .error { background: #fef2f2; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 16px; }
-    .back-link { display: block; text-align: center; margin-top: 18px; color: #6b7280; font-size: 0.88rem; text-decoration: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { min-height: 100vh; display: flex; overflow-x: hidden; width: 100%; }
+
+    .left { flex: 1; background: linear-gradient(to bottom right, #1492ff, #015fbb); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+    .left h1 { font-size: 3rem; font-weight: bold; z-index: 1; color: #fff; }
+    .left p { font-weight: 500; margin-top: 10px; z-index: 1; }
+    .circle1, .circle2, .circle3 { position: absolute; border-radius: 50%; }
+    .circle1 { width: 300px; height: 300px; background: #0094ff; bottom: -150px; left: -100px; z-index: 0; }
+    .circle2 { width: 400px; height: 400px; background: #0094ff; bottom: -200px; right: 50px; z-index: 0; }
+    .circle3 { width: 250px; height: 250px; background: #1da1f2; top: 408px; right: -104px; z-index: 0; }
+
+    .right { flex: 1; padding: 80px; position: relative; display: flex; justify-content: center; align-items: center; background-color: #fff; overflow: hidden; }
+    .form-container { width: 100%; max-width: 400px; z-index: 1; }
+    .form-container h2 { font-size: 2.5rem; font-weight: bold; color: #333; }
+    .form-container p { color: #888; margin-bottom: 30px; }
+
+    .input-group { position: relative; margin-bottom: 20px; }
+    .input-group input { width: 100%; padding: 15px 45px 15px 40px; border-radius: 10px; background-color: #f0f0f0; border: none; font-size: 1rem; }
+    .input-group .icon-prefix { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); }
+    .input-group .show { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #007bff; cursor: pointer; font-size: 0.9rem; }
+    .input-group .show i { color: #4a4a4a; }
+
+    .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 0.9rem; }
+    .options label { display: flex; align-items: center; color: #555; }
+    .options input[type=checkbox] { margin-right: 5px; }
+    .options a { color: #007bff; text-decoration: none; }
+    .options a:hover { text-decoration: underline; }
+
+    .btn { width: 100%; background-color: #003c71; color: #fff; padding: 15px; font-size: 1rem; font-weight: bold; border: none; border-radius: 12px; cursor: pointer; margin-bottom: 20px; transition: background-color .3s ease; display: flex; align-items: center; justify-content: center; gap: .5rem; }
+    .btn:hover { background-color: #002c52; }
+
+    .error-box { background: #fdecea; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 16px; }
+
+    @media (max-width: 992px) {
+        body { flex-direction: column; min-height: 100vh; height: auto; overflow-y: auto; }
+        .left, .right { flex: none; width: 100%; }
+        .left { height: auto; min-height: 200px; padding: 40px 20px; text-align: center; order: 1; }
+        .left h1 { font-size: 2.5rem; }
+        .right { padding: 40px 20px; order: 2; }
+        .form-container { max-width: 450px; margin: 0 auto; }
+        .circle1, .circle2, .circle3 { display: none; }
+    }
+    @media (max-width: 767px) {
+        .left { padding: 30px 15px; min-height: 150px; }
+        .left h1 { font-size: 2rem; }
+        .left p { font-size: 0.9rem; }
+        .right { padding: 30px 40px; }
+        .form-container { max-width: 100%; }
+        .form-container h2 { font-size: 2rem; }
+        .form-container p { font-size: 0.9rem; margin-bottom: 20px; }
+        .btn { padding: 12px; font-size: 0.95rem; }
+    }
 </style>
 </head>
 <body>
-<div class="card">
-    <a href="{% url 'landing' %}" class="logo logo-font">GramLogo</a>
-    <h2>तुमच्या अकाऊंट मध्ये लॉगिन करा</h2>
-    {% if error %}<div class="error">{{ error }}</div>{% endif %}
-    <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-        <label>{{ field.label }}</label>
-        {{ field }}
-        {% if field.errors %}<p style="color:#b91c1c;font-size:0.82rem;margin-top:-10px;">{{ field.errors|striptags }}</p>{% endif %}
-        {% endfor %}
-        <button type="submit">लॉगिन</button>
-    </form>
-    <a href="{% url 'landing' %}" class="back-link">← मुख्यपानावर परत जा</a>
-</div>
+    <div class="left">
+        <h1>तुमचे सहर्ष स्वागत</h1>
+        <p>ग्रामपंचायत</p>
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+    </div>
+    <div class="right">
+        <div class="form-container">
+            <form method="post">
+                {% csrf_token %}
+                <h2>लॉगिन करा</h2>
+                <p>तुमच्या अकाऊंट मध्ये लॉगिन करा</p>
+
+                {% if error %}<div class="error-box">{{ error }}</div>{% endif %}
+
+                <div class="input-group">
+                    <span class="icon-prefix">👤</span>
+                    {{ form.username }}
+                </div>
+                <div class="input-group">
+                    <span class="icon-prefix">🔐</span>
+                    {{ form.password }}
+                    <span class="show" onclick="togglePassword()">
+                        <i id="toggleIcon" class="fa fa-eye"></i>
+                    </span>
+                </div>
+                <div class="options">
+                    <label><input type="checkbox"> मला लक्षात ठेवा</label>
+                    <a href="#">पासवर्ड विसरलात?</a>
+                </div>
+
+                <button type="submit" class="btn"><span>लॉगिन</span></button>
+            </form>
+            <p style="margin-top:10px;"><a href="{% url 'landing' %}" style="color:#007bff;text-decoration:none;">← मुख्यपानावर परत जा</a></p>
+        </div>
+        <div class="circle3"></div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var input = document.getElementById('id_password');
+            var icon = document.getElementById('toggleIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

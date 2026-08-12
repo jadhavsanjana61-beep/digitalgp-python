@@ -22,12 +22,15 @@
     .btn-brand { padding: 12px 26px; background: var(--color-primary); color: #fff; font-weight: 600; border-radius: 8px; border: none; transition: all .25s; }
     .btn-brand:hover { background: var(--color-secondary); color: #fff; }
 
-    .hero { padding: 150px 24px 100px; background: linear-gradient(135deg, #312e81 0%, #4C51BF 55%, #667EEA 100%); position: relative; overflow: hidden; color: #fff; }
-    .hero::after { content:''; position:absolute; inset:0; background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 22px 22px; opacity:.5; }
+    .hero { padding: 150px 24px 130px; position: relative; overflow: hidden; color: #fff;
+             background-image: linear-gradient(to right, rgba(31,41,55,0.75), rgba(31,41,55,0.15)), url('https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1600&q=80');
+             background-size: cover; background-position: center; }
     .hero .wrap { max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
-    .hero-badge { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; background:rgba(255,255,255,0.12); border-radius:999px; margin-bottom:22px; font-size:0.85rem; }
-    .hero h1 { font-size: 3rem; font-weight: 700; max-width: 700px; line-height: 1.2; margin-bottom: 20px; }
-    .hero p.lead { font-size: 1.2rem; opacity: .9; max-width: 600px; margin-bottom: 34px; }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; background:rgba(255,255,255,0.12); backdrop-filter: blur(4px); border-radius:999px; margin-bottom:22px; font-size:0.85rem; }
+    .hero h1 { font-size: 3.4rem; font-weight: 700; max-width: 620px; line-height: 1.2; margin-bottom: 20px; }
+    .hero p.lead { font-size: 1.2rem; opacity: .95; max-width: 560px; margin-bottom: 34px; }
+    .btn-hero-outline { padding: 14px 30px; background: rgba(255,255,255,0.1); backdrop-filter: blur(4px); color: #fff; border: 1px solid rgba(255,255,255,0.35); font-weight: 500; border-radius: 8px; }
+    .btn-hero-outline:hover { background: rgba(255,255,255,0.2); color: #fff; }
 
     .section { padding: 80px 24px; }
     .section .wrap { max-width: 1200px; margin: 0 auto; }
@@ -77,6 +80,7 @@
         <a href="{% url 'landing' %}" class="logo-font fs-3" style="color: var(--color-primary);">GramLogo</a>
         <div class="d-flex align-items-center gap-2">
             <a href="#templates" class="btn-outline-brand">View Templates</a>
+            <a href="tel:+918412083897" class="btn-outline-brand d-inline-flex align-items-center gap-1">Contact Us <i class="ri-phone-line"></i></a>
             <a href="{% url 'gp_login' %}" class="btn-outline-brand">Login</a>
         </div>
     </div>
@@ -97,8 +101,8 @@
         <h1>Showcase Your Village with Pride</h1>
         <p class="lead">Select from modern, mobile-friendly templates to highlight your Grampanchayat's culture, events, development, and leaders.</p>
         <div class="d-flex gap-3 flex-wrap">
-            <a href="#templates" class="btn-brand d-inline-flex align-items-center gap-2">View Templates <i class="ri-arrow-right-line"></i></a>
-            <a href="#get-started" class="btn-outline-brand" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.4);">Get Started</a>
+            <a href="#templates" class="btn-brand d-inline-flex align-items-center gap-2" style="padding:14px 30px;">View Templates <i class="ri-arrow-right-line"></i></a>
+            <a href="tel:+918412083897" class="btn-hero-outline d-inline-flex align-items-center gap-2">Contact Us <i class="ri-phone-line"></i></a>
         </div>
     </div>
 </section>
