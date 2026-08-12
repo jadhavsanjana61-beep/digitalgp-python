@@ -188,12 +188,31 @@
           </div>
           {% endif %}
           <input type="hidden" name="template_id" id="publishTemplateId" value="{{ reopen_template_id|default:'Template1' }}">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Gram Panchayat Name</label>
-            <input type="text" name="gram_panchayat_name" class="form-control" placeholder="e.g., Anytown Gram Panchayat" required>
+          <div class="row g-3">
+            <div class="col-6">
+                <label class="form-label fw-semibold">जिल्हा (District)</label>
+                <select name="district" id="publishDistrict" class="form-select" required>
+                    <option value="">-- निवडा --</option>
+                    {% for d in districts_talukas %}<option value="{{ d }}">{{ d }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="form-label fw-semibold">तालुका (Taluka)</label>
+                <select name="taluka" id="publishTaluka" class="form-select" required>
+                    <option value="">-- आधी जिल्हा निवडा --</option>
+                </select>
+            </div>
+          </div>
+          <div class="mb-3 mt-3">
+            <label class="form-label fw-semibold">Gram Panchayat Name (English)</label>
+            <input type="text" name="gram_panchayat_name_en" class="form-control" placeholder="e.g., Anytown Gram Panchayat" required>
           </div>
           <div class="mb-3">
-            <label class="form-label fw-semibold">Contact Number</label>
+            <label class="form-label fw-semibold">ग्रामपंचायतीचे नाव (मराठी)</label>
+            <input type="text" name="gram_panchayat_name" class="form-control" placeholder="उदा. अँटीटाऊन ग्रामपंचायत" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">मोबाईल नंबर</label>
             <input type="tel" name="contact_no" class="form-control" placeholder="e.g., 9876543210" required>
           </div>
           <div class="mb-2">
@@ -221,6 +240,15 @@ document.getElementById('previewModal').addEventListener('show.bs.modal', functi
     document.getElementById('previewFrame').src = btn.getAttribute('data-src');
     document.getElementById('previewModalLabel').textContent = 'Preview: ' + btn.getAttribute('data-name');
     document.getElementById('publishTemplateId').value = btn.getAttribute('data-tid');
+});
+
+// District -> Taluka cascading dropdown (no server round-trip needed).
+var DISTRICTS_TALUKAS = {{ districts_talukas_json|safe }};
+document.getElementById('publishDistrict').addEventListener('change', function () {
+    var talukaSelect = document.getElementById('publishTaluka');
+    var talukas = DISTRICTS_TALUKAS[this.value] || [];
+    talukaSelect.innerHTML = '<option value="">-- निवडा --</option>' +
+        talukas.map(function (t) { return '<option value="' + t + '">' + t + '</option>'; }).join('');
 });
 {% if publish_errors %}
 document.addEventListener('DOMContentLoaded', function () {

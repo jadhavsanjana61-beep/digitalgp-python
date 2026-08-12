@@ -8,14 +8,17 @@ never actually worked -- here it's wired up for real, since a signup button
 that does nothing isn't something worth reproducing faithfully).
 """
 
+import json
 import re
-import secrets
-import string
 
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 
 from . import models
+from .maharashtra_locations import MAHARASHTRA_DISTRICTS_TALUKAS
+from .platform_views import _generate_password, _username_from_mobile
+
+DISTRICTS_TALUKAS_JSON = json.dumps(MAHARASHTRA_DISTRICTS_TALUKAS)
 
 TEMPLATE_GALLERY = [
     {
@@ -48,45 +51,43 @@ def landing_view(request):
     return render(request, "marketing/landing.html", {
         "templates": TEMPLATE_GALLERY,
         "village_count": village_count,
+        "districts_talukas": MAHARASHTRA_DISTRICTS_TALUKAS,
+        "districts_talukas_json": DISTRICTS_TALUKAS_JSON,
     })
-
-
-def _generate_username(gram_panchayat_name):
-    slug = re.sub(r"[^a-z0-9]+", "", gram_panchayat_name.lower())[:20] or "gp"
-    username = slug
-    n = 1
-    while User.objects.filter(username=username).exists():
-        n += 1
-        username = f"{slug}{n}"
-    return username
-
-
-def _generate_password(length=10):
-    alphabet = string.ascii_letters + string.digits
-    return "".join(secrets.choice(alphabet) for _ in range(length))
 
 
 def publish_site_view(request):
     """
     Public self-service signup -- the working version of the original's
-    "Configure Your New Site" modal (GramPanchyatName + ContactNo + Subdomain).
-    Anyone can create a new Gram Panchayat tenant here, no login required --
-    matches the original UI's intent (a public "Get Started" flow).
+    "Configure Your New Site" modal. Fields are trimmed to exactly what's
+    needed: district, taluka, GP name (English + Marathi), mobile number,
+    template, subdomain -- no Registration Type/Gram ID/Employee fields,
+    those were internal company-CRM bookkeeping this project has no use for.
+    Anyone can create a new Gram Panchayat tenant here, no login required.
     """
     village_count = models.Registration.objects.count()
     if request.method != "POST":
         return redirect("landing")
 
     template_id = request.POST.get("template_id", "Template1")
+    district = request.POST.get("district", "").strip()
+    taluka = request.POST.get("taluka", "").strip()
+    gram_name_en = request.POST.get("gram_panchayat_name_en", "").strip()
     gram_name = request.POST.get("gram_panchayat_name", "").strip()
     contact_no = request.POST.get("contact_no", "").strip()
     subdomain_part = request.POST.get("subdomain_part", "").strip().lower()
 
     errors = []
+    if district not in MAHARASHTRA_DISTRICTS_TALUKAS:
+        errors.append("योग्य जिल्हा निवडा.")
+    elif taluka not in MAHARASHTRA_DISTRICTS_TALUKAS[district]:
+        errors.append("निवडलेल्या जिल्ह्यासाठी योग्य तालुका निवडा.")
+    if not gram_name_en:
+        errors.append("Gram Panchayat Name (English) आवश्यक आहे.")
     if not gram_name:
-        errors.append("Gram Panchayat चं नाव आवश्यक आहे.")
+        errors.append("ग्रामपंचायतीचे नाव (मराठी) आवश्यक आहे.")
     if not re.match(r"^\+?[0-9]{10,15}$", contact_no):
-        errors.append("संपर्क क्रमांक 10-15 अंकी असावा.")
+        errors.append("मोबाईल क्रमांक 10-15 अंकी असावा.")
     if not re.match(r"^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$", subdomain_part):
         errors.append("Website address मध्ये फक्त letters, numbers, hyphens चालतील.")
 
@@ -99,21 +100,26 @@ def publish_site_view(request):
     if errors:
         return render(request, "marketing/landing.html", {
             "templates": TEMPLATE_GALLERY, "village_count": village_count,
+            "districts_talukas": MAHARASHTRA_DISTRICTS_TALUKAS,
+            "districts_talukas_json": DISTRICTS_TALUKAS_JSON,
             "publish_errors": errors, "reopen_template_id": template_id,
         })
 
     registration = models.Registration.objects.create(
-        gram_panchayat_name=gram_name, contact_no=contact_no,
+        gram_panchayat_name=gram_name, gram_panchayat_name_en=gram_name_en,
+        district=district, taluka=taluka, contact_no=contact_no,
         template=template_id, status=True,
     )
     models.SubdomainDetail.objects.create(register=registration, subdomain=full_subdomain)
-    username = _generate_username(gram_name)
+    username = _username_from_mobile(contact_no)
     password = _generate_password()
     user = User.objects.create_user(username=username, password=password, is_staff=True)
     models.UserInfo.objects.create(user=user, register=registration, role=models.UserInfo.ROLE_ADMIN)
 
     return render(request, "marketing/landing.html", {
         "templates": TEMPLATE_GALLERY, "village_count": village_count + 1,
+        "districts_talukas": MAHARASHTRA_DISTRICTS_TALUKAS,
+        "districts_talukas_json": DISTRICTS_TALUKAS_JSON,
         "published": {
             "gp": registration, "subdomain": full_subdomain,
             "username": username, "password": password,

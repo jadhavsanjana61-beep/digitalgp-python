@@ -5,7 +5,7 @@ these -- a village-level GP admin never sees this, same separation as the
 SuperuserOnlyModelAdmin tables in admin.py.
 """
 
-import re
+import json
 import secrets
 import string
 
@@ -14,18 +14,23 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 
 from . import models
+from .maharashtra_locations import MAHARASHTRA_DISTRICTS_TALUKAS
 from .platform_forms import RegisterGpForm
+
+DISTRICTS_TALUKAS_JSON = json.dumps(MAHARASHTRA_DISTRICTS_TALUKAS)
 
 is_superuser = user_passes_test(lambda u: u.is_superuser, login_url="/admin/login/")
 
 
-def _generate_username(gram_panchayat_name):
-    slug = re.sub(r"[^a-z0-9]+", "", gram_panchayat_name.lower())[:20] or "gp"
-    username = slug
+def _username_from_mobile(contact_no):
+    """Login username = the mobile number itself, matching the original
+    app's TblUserInfo.UserName = ContactNo. A numeric suffix only kicks in
+    on the unlikely collision of a stray User already holding that username."""
+    username = contact_no
     n = 1
     while User.objects.filter(username=username).exists():
         n += 1
-        username = f"{slug}{n}"
+        username = f"{contact_no}-{n}"
     return username
 
 
@@ -44,17 +49,17 @@ def register_gp_view(request):
             data = form.cleaned_data
             registration = models.Registration.objects.create(
                 gram_panchayat_name=data["gram_panchayat_name"],
+                gram_panchayat_name_en=data["gram_panchayat_name_en"],
                 taluka=data["taluka"],
                 district=data["district"],
                 contact_no=data["contact_no"],
-                email=data["email"],
                 template=data["template"],
                 status=True,
             )
             models.SubdomainDetail.objects.create(
                 register=registration, subdomain=data["subdomain"],
             )
-            username = _generate_username(data["gram_panchayat_name"])
+            username = _username_from_mobile(data["contact_no"])
             password = _generate_password()
             user = User.objects.create_user(username=username, password=password, is_staff=True)
             models.UserInfo.objects.create(
@@ -67,7 +72,10 @@ def register_gp_view(request):
             form = RegisterGpForm()
     else:
         form = RegisterGpForm()
-    return render(request, "platform/register_gp.html", {"form": form, "created": created})
+    return render(request, "platform/register_gp.html", {
+        "form": form, "created": created,
+        "districts_talukas_json": DISTRICTS_TALUKAS_JSON,
+    })
 
 
 @login_required(login_url="/admin/login/")

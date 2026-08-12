@@ -69,7 +69,8 @@ class AuditModel(models.Model):
 
 class Registration(AuditModel):
     """maps to TblRegistration (table: TblRegistration) -- the multi-tenant root; one row = one Gram Panchayat."""
-    gram_panchayat_name = models.TextField(blank=True, null=True)  # C#: GramPanchyatName (typo fixed here)
+    gram_panchayat_name = models.TextField(blank=True, null=True)  # Marathi display name -- shown everywhere on the public site
+    gram_panchayat_name_en = models.TextField(blank=True, null=True)  # English name -- registration/reference only
     taluka = models.TextField(blank=True, null=True)
     district = models.TextField(blank=True, null=True)
     gid = models.IntegerField(blank=True, null=True)  # column name override: GId
