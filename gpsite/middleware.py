@@ -26,10 +26,13 @@ class TenantResolutionMiddleware:
       when request.tenant is set) -- which template folder to render.
 
     Real subdomains (e.g. padegaon.digitalgp.in) are resolved from the Host header.
-    Since local dev has no real DNS and we're deliberately not touching Windows'
-    hosts file (needs admin rights), DEBUG mode also accepts a "?subdomain=..."
-    query param or a "dev_subdomain" session value so multi-tenant switching can be
-    demoed without any DNS/hosts setup.
+    Neither local dev nor the free Render deployment have real per-tenant DNS
+    (local: no hosts-file edit, needs admin rights; Render free tier: only the
+    one *.onrender.com host), so whenever the Host header itself doesn't match
+    a real registered subdomain, a "?subdomain=..." query param / "dev_subdomain"
+    session value is accepted as a fallback. This is intentionally NOT limited to
+    DEBUG mode -- it only ever kicks in when the host didn't already resolve to a
+    tenant, so it can't be used to override a real subdomain's own site.
     """
 
     def __init__(self, get_response):
@@ -37,28 +40,30 @@ class TenantResolutionMiddleware:
 
     def __call__(self, request):
         host = request.get_host().split(":")[0].lower()
-        subdomain_key = None
-
-        if host != settings.BASE_DOMAIN.lower():
-            subdomain_key = host
-
-        if settings.DEBUG and host in ("localhost", "127.0.0.1"):
-            override = request.GET.get("subdomain")
-            if override:
-                request.session["dev_subdomain"] = override
-            subdomain_key = request.session.get("dev_subdomain")
-
         request.tenant = None
         request.tenant_template = None
 
-        if subdomain_key:
-            detail = (
-                SubdomainDetail.objects.select_related("register")
-                .filter(subdomain=subdomain_key)
-                .first()
-            )
-            if detail and detail.register:
-                request.tenant = detail.register
-                request.tenant_template = template_folder_for(detail.register)
+        subdomain_key = None if host == settings.BASE_DOMAIN.lower() else host
+        detail = self._lookup(subdomain_key) if subdomain_key else None
+
+        if detail is None:
+            override = request.GET.get("subdomain")
+            if override:
+                request.session["dev_subdomain"] = override
+            dev_key = request.session.get("dev_subdomain")
+            if dev_key:
+                detail = self._lookup(dev_key)
+
+        if detail and detail.register:
+            request.tenant = detail.register
+            request.tenant_template = template_folder_for(detail.register)
 
         return self.get_response(request)
+
+    @staticmethod
+    def _lookup(subdomain_key):
+        return (
+            SubdomainDetail.objects.select_related("register")
+            .filter(subdomain=subdomain_key)
+            .first()
+        )
