@@ -1,16 +1,20 @@
 {% extends base_template %}
 {% block content %}
-<div class="page-header"><h2>{{ page_title }}</h2></div>
-{% if stats %}
-<div class="stat-grid">
-    {% for label, value in stats %}
-    <div class="card stat-card">
-        <p class="stat-value">{{ value|default:0 }}</p>
-        <p class="muted">{{ label }}</p>
+<div class="container py-4">
+    <div class="page-header"><h2>{{ page_title }}</h2></div>
+    {% if stats %}
+    <div class="row g-3 mt-1">
+        {% for label, value in stats %}
+        <div class="col-6 col-md-3">
+            <div class="card card-custom text-center p-4 h-100">
+                <p class="fs-2 fw-bold text-primary-custom mb-1">{{ value|default:0 }}</p>
+                <p class="muted mb-0">{{ label }}</p>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% else %}
+    <div class="card card-custom p-4"><p class="muted mb-0">सध्या इथे काहीही नाही.</p></div>
+    {% endif %}
 </div>
-{% else %}
-<div class="card"><p class="muted">सध्या इथे काहीही नाही.</p></div>
-{% endif %}
 {% endblock %}

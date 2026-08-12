@@ -1,17 +1,23 @@
 {% extends base_template %}
 {% block content %}
-<div class="page-header"><h2>{{ page_title }}</h2></div>
-{% if videos %}
-<div class="grid">
-    {% for v in videos %}
-    <div class="card">
-        {% if v.video_url %}<video src="{{ v.video_url }}" controls style="width:100%;aspect-ratio:16/9;margin-bottom:10px;background:#000;"></video>{% endif %}
-        <h4>{{ v.title }}</h4>
-        {% if v.description %}<p class="muted">{{ v.description|truncatewords:20 }}</p>{% endif %}
+<div class="container py-4">
+    <div class="page-header"><h2>{{ page_title }}</h2></div>
+    {% if videos %}
+    <div class="row g-4 mt-1">
+        {% for v in videos %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-custom h-100">
+                {% if v.video_url %}<video src="{{ v.video_url }}" controls style="width:100%;aspect-ratio:16/9;background:#000;"></video>{% endif %}
+                <div class="p-3">
+                    <h6 class="fw-bold mb-1">{{ v.title }}</h6>
+                    {% if v.description %}<p class="text-secondary small">{{ v.description|truncatewords:20 }}</p>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% else %}
+    <div class="card card-custom p-4"><p class="muted mb-0">सध्या इथे काहीही नाही.</p></div>
+    {% endif %}
 </div>
-{% else %}
-<div class="card"><p class="muted">सध्या इथे काहीही नाही.</p></div>
-{% endif %}
 {% endblock %}

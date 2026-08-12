@@ -1,20 +1,26 @@
 {% extends base_template %}
 {% block content %}
-<div class="page-header"><h2>{{ page_title }}</h2></div>
-{% if items %}
-<div class="grid">
-    {% for item in items %}
-    <div class="card">
-        {% if item.image_url %}<img src="{{ item.image_url }}" alt="{{ item.title }}">{% endif %}
-        <h4>{{ item.title }}</h4>
-        {% if item.subtitle %}<p class="muted">{{ item.subtitle }}</p>{% endif %}
-        {% if item.date %}<p class="muted">{{ item.date|date:"d M Y" }}</p>{% endif %}
-        {% if item.description %}<p>{{ item.description|truncatewords:25 }}</p>{% endif %}
-        {% if item.link %}<a class="btn" href="{{ item.link }}">{{ item.link_label|default:"अधिक बघा" }}</a>{% endif %}
+<div class="container py-4">
+    <div class="page-header"><h2>{{ page_title }}</h2></div>
+    {% if items %}
+    <div class="row g-4 mt-1">
+        {% for item in items %}
+        <div class="col-sm-6 col-lg-4">
+            <div class="card card-custom h-100">
+                {% if item.image_url %}<img src="{{ item.image_url }}" class="program-image" alt="{{ item.title }}">{% endif %}
+                <div class="p-3">
+                    <h6 class="fw-bold mb-1">{{ item.title }}</h6>
+                    {% if item.subtitle %}<p class="muted mb-1">{{ item.subtitle }}</p>{% endif %}
+                    {% if item.date %}<p class="muted mb-1">{{ item.date|date:"d M Y" }}</p>{% endif %}
+                    {% if item.description %}<p class="text-secondary small">{{ item.description|truncatewords:25 }}</p>{% endif %}
+                    {% if item.link %}<a class="btn btn-outline-primary-custom btn-sm rounded-pill mt-1" href="{{ item.link }}">{{ item.link_label|default:"अधिक बघा" }}</a>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% else %}
+    <div class="card card-custom p-4"><p class="muted mb-0">सध्या इथे काहीही नाही.</p></div>
+    {% endif %}
 </div>
-{% else %}
-<div class="card"><p class="muted">सध्या इथे काहीही नाही.</p></div>
-{% endif %}
 {% endblock %}

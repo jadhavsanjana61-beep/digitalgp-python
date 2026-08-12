@@ -58,10 +58,12 @@ class Command(BaseCommand):
                 f"{registration.gram_panchayat_name} ({subdomain}) — {status}"
             ))
 
-        padegaon = models.Registration.objects.get(gram_panchayat_name="Padegaon Gram Panchayat")
-        self._seed_content(padegaon)
-        self.stdout.write(self.style.SUCCESS("Sample content seeded for Padegaon."))
+        for entry in DEMO_GPS:
+            gp = models.Registration.objects.get(gram_panchayat_name=entry["gram_panchayat_name"])
+            self._seed_content(gp)
+            self.stdout.write(self.style.SUCCESS(f"Sample content seeded for {gp.gram_panchayat_name}."))
 
+        padegaon = models.Registration.objects.get(gram_panchayat_name="Padegaon Gram Panchayat")
         self._seed_admin_user(padegaon)
 
     def _seed_admin_user(self, gp):
@@ -84,9 +86,9 @@ class Command(BaseCommand):
         about, _ = models.AboutUs.objects.get_or_create(
             register=gp,
             defaults={
-                "description": "पडेगाव ही सातारा जिल्ह्यातील कराड तालुक्यातील एक प्रगतीशील ग्रामपंचायत आहे.",
-                "nearest_railway_station": "कराड",
-                "nearest_city": "कराड",
+                "description": f"{gp.gram_panchayat_name} ही {gp.district} जिल्ह्यातील {gp.taluka} तालुक्यातील एक प्रगतीशील ग्रामपंचायत आहे.",
+                "nearest_railway_station": gp.taluka,
+                "nearest_city": gp.taluka,
             },
         )
         for i in range(1, 4):

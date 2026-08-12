@@ -36,16 +36,27 @@ def home_view(request):
         ).distinct().order_by("gram_panchayat_name")
         return render(request, "no_tenant.html", {"registrations": registrations})
 
-    suvichar = models.Suvichar.objects.filter(register=request.tenant).order_by("-id").first()
-    announcements = models.Announcement.objects.filter(register=request.tenant).order_by("-date")[:5]
-    slides = models.ImageSlider.objects.filter(register=request.tenant).order_by("-id")[:5]
+    tenant = request.tenant
+    suvichar = models.Suvichar.objects.filter(register=tenant).order_by("-id").first()
+    announcements = models.Announcement.objects.filter(register=tenant).order_by("-date")[:4]
+    slides = models.ImageSlider.objects.filter(register=tenant).order_by("-id")[:6]
+    about = models.AboutUs.objects.filter(register=tenant).first()
+    events = models.EventMaster.objects.filter(register=tenant).order_by("-event_date")[:4]
+    awards = models.Award.objects.filter(register=tenant).order_by("-id")[:3]
+    vitarit_dakhle = models.VitaritDakhle.objects.filter(register=tenant).order_by("-id").first()
+    gallery = models.Gallery.objects.filter(register=tenant).order_by("-id")[:8]
 
     return render(request, "content/home.html", {
-        "gp": request.tenant,
+        "gp": tenant,
         "base_template": _base_template(request),
         "suvichar": suvichar,
         "announcements": announcements,
         "slides": slides,
+        "about": about,
+        "events": events,
+        "awards": awards,
+        "vitarit_dakhle": vitarit_dakhle,
+        "gallery": gallery,
     })
 
 

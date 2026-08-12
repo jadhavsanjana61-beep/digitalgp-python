@@ -1,71 +1,219 @@
 {% extends base_template %}
 {% block content %}
 
-{% with first_slide=slides.0 %}
-{% if first_slide and first_slide.content_type == "video" and first_slide.video_url %}
-<div class="hero">
-    <video src="{{ first_slide.video_url }}" autoplay muted loop playsinline></video>
-    <div class="hero-overlay">
-        <h2>{{ gp.gram_panchayat_name }}</h2>
-        <p>{{ gp.taluka }}, {{ gp.district }}</p>
+<section class="hero-section">
+    <div class="hero-background-slider">
+        {% if slides %}
+            {% for slide in slides %}
+                {% if slide.image_url %}
+                <div class="hero-slide{% if forloop.first %} active{% endif %}" style="background-image:url('{{ slide.image_url }}');"></div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </div>
-</div>
-{% elif first_slide and first_slide.image_url %}
-<div class="hero">
-    <img src="{{ first_slide.image_url }}" alt="{{ gp.gram_panchayat_name }}">
-    <div class="hero-overlay">
-        <h2>{{ gp.gram_panchayat_name }}</h2>
-        <p>{{ gp.taluka }}, {{ gp.district }}</p>
+    <div class="hero-overlay"></div>
+    <div class="hero-content-wrapper">
+        <h1>{{ gp.gram_panchayat_name|default:"ग्रामपंचायत" }}</h1>
+        <p class="lead">{{ gp.taluka }}, {{ gp.district }}</p>
+        <p class="lead">जनतेच्या सहभागातून सेवा आणि विकासाचा नवा अध्याय.</p>
+        <a href="{% url 'about_us' %}" class="btn btn-primary-custom btn-lg rounded-pill mt-2 px-4">आमच्याबद्दल</a>
     </div>
-</div>
-{% else %}
-<div class="hero-fallback">
-    <div>
-        <h2>{{ gp.gram_panchayat_name|default:"ग्रामपंचायत" }} मध्ये आपले स्वागत आहे</h2>
-        <p>{{ gp.taluka }}, {{ gp.district }}</p>
-    </div>
-</div>
-{% endif %}
-{% endwith %}
+</section>
 
 {% if slides|length > 1 %}
-<div class="grid" style="margin-bottom:20px;">
-    {% for slide in slides|slice:"1:" %}
-        {% if slide.content_type == "video" and slide.video_url %}
-        <div class="card"><video src="{{ slide.video_url }}" controls style="width:100%;aspect-ratio:4/3;"></video></div>
-        {% elif slide.image_url %}
-        <div class="card"><img src="{{ slide.image_url }}" alt="{{ slide.image_name }}"></div>
-        {% endif %}
-    {% endfor %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var slides = document.querySelectorAll('.hero-slide');
+    if (slides.length < 2) return;
+    var i = 0;
+    setInterval(function () {
+        slides[i].classList.remove('active');
+        i = (i + 1) % slides.length;
+        slides[i].classList.add('active');
+    }, 4000);
+});
+</script>
+{% endif %}
+
+{% if suvichar %}
+<div class="bg-primary-custom text-white text-center py-3 px-3">
+    <span class="fw-semibold">🌸 आजचा सुविचार: {{ suvichar.suvichar }} 🌸</span>
 </div>
 {% endif %}
 
-<div class="quick-stats">
-    <span class="pill">लोकसंख्या: {{ gp.population|default:"—" }}</span>
-    <span class="pill">स्थापना वर्ष: {{ gp.establish_year|default:"—" }}</span>
-    {% if gp.ward_count %}<span class="pill">वॉर्ड: {{ gp.ward_count }}</span>{% endif %}
+<!-- आकडेवारी -->
+<div class="stats-main-container">
+    <div class="container">
+        <div class="stats-card-container">
+            <div class="stats-scroll-wrapper">
+                <div class="stat-item-box">
+                    <div class="stat-number">{{ gp.population|default:"—" }}</div>
+                    <div class="stat-label">एकूण लोकसंख्या</div>
+                </div>
+                <div class="stat-item-box">
+                    <div class="stat-number">{{ gp.establish_year|default:"—" }}</div>
+                    <div class="stat-label">स्थापना वर्ष</div>
+                </div>
+                <div class="stat-item-box">
+                    <div class="stat-number">{{ gp.ward_count|default:"—" }}</div>
+                    <div class="stat-label">वॉर्ड संख्या</div>
+                </div>
+                <div class="stat-item-box">
+                    <div class="stat-number">{{ gp.area|default:"—" }}</div>
+                    <div class="stat-label">गावाचे क्षेत्रफळ</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="two-col">
-    <div class="card">
-        <h3 style="margin-top:0;">स्वागत आहे</h3>
-        <p>ही {{ gp.gram_panchayat_name|default:"या ग्रामपंचायती" }}ची अधिकृत वेबसाईट आहे — गावाची माहिती, घोषणा, योजना आणि सेवा एकाच ठिकाणी.</p>
-        {% if suvichar %}
-        <p class="muted" style="margin-top:16px;">आजचा सुविचार</p>
-        <p><em>{{ suvichar.suvichar }}</em></p>
-        {% endif %}
+<!-- आमच्याबद्दल -->
+{% if about %}
+<div class="section-padding">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <img src="{{ about_image|default:'https://picsum.photos/seed/aboutgp/700/500' }}" alt="{{ gp.gram_panchayat_name }}" class="about-image">
+            </div>
+            <div class="col-lg-6">
+                <p class="section-eyebrow">आमच्याबद्दल</p>
+                <h2 class="section-title mb-3">आमच्या गावाची माहिती</h2>
+                <p class="text-secondary">{{ about.description|truncatewords:60 }}</p>
+                <a href="{% url 'about_us' %}" class="btn btn-outline-primary-custom rounded-pill mt-2">अधिक वाचा →</a>
+            </div>
+        </div>
     </div>
+</div>
+{% endif %}
 
-    {% if announcements %}
-    <div class="card">
-        <h4 style="margin-top:0;">ताज्या घोषणा</h4>
-        <ul style="padding-left:18px;margin:0 0 14px;">
-            {% for a in announcements %}
-            <li style="margin-bottom:8px;">{{ a.title }}<br><span class="muted">{{ a.date|date:"d M Y" }}</span></li>
+<!-- कार्यक्रम -->
+{% if events %}
+<div class="section-padding bg-gray-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <p class="section-eyebrow">आमचे कार्यक्रम</p>
+            <h2 class="section-title">गाव विकासासाठी कार्यक्रम</h2>
+        </div>
+        <div class="row g-4">
+            {% for e in events %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-custom h-100">
+                    {% if e.image_url %}<img src="{{ e.image_url }}" class="program-image" alt="{{ e.event_name }}">{% endif %}
+                    <div class="p-3">
+                        <h6 class="fw-bold">{{ e.event_name }}</h6>
+                        <p class="text-secondary small">{{ e.event_desc|truncatewords:12 }}</p>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </ul>
-        <a class="btn" href="{% url 'announcements' %}">सर्व घोषणा बघा →</a>
+        </div>
+        <div class="text-center mt-4"><a href="{% url 'events' %}" class="btn btn-outline-primary-custom rounded-pill">सर्व कार्यक्रम पहा →</a></div>
     </div>
-    {% endif %}
+</div>
+{% endif %}
+
+<!-- पुरस्कार -->
+{% if awards %}
+<div class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <p class="section-eyebrow">आमचे पुरस्कार</p>
+            <h2 class="section-title">🏆 पुरस्कार आणि सन्मान 🏆</h2>
+        </div>
+        <div class="row g-4">
+            {% for a in awards %}
+            <div class="col-md-4">
+                <div class="card card-custom text-center h-100 p-4">
+                    <div class="icon-wrapper"><i class="bi bi-award"></i></div>
+                    <h6 class="fw-bold">{{ a.award_name }}</h6>
+                    <p class="text-secondary small">{{ a.award_date }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4"><a href="{% url 'awards' %}" class="btn btn-outline-primary-custom rounded-pill">सर्व पुरस्कार पहा →</a></div>
+    </div>
+</div>
+{% endif %}
+
+<!-- वितरित दाखले -->
+{% if vitarit_dakhle %}
+<div class="dakhle-section">
+    <div class="container text-center">
+        <span class="dakhle-header-badge"><i class="bi bi-file-earmark-text"></i> वितरित दाखल्यांची संख्या</span>
+        <h2 class="section-title mb-4">ग्रामपंचायतीद्वारे नागरिकांना वितरित केलेल्या दाखल्यांचा सारांश</h2>
+        <div class="dakhle-grid text-start text-md-center">
+            <div class="dakhle-card"><div class="num">{{ vitarit_dakhle.janm_dakhale|default:0 }}</div><div class="lbl">जन्म दाखला</div></div>
+            <div class="dakhle-card"><div class="num">{{ vitarit_dakhle.mrutu_dakhale|default:0 }}</div><div class="lbl">मृत्यू दाखला</div></div>
+            <div class="dakhle-card"><div class="num">{{ vitarit_dakhle.vivah_dakhale|default:0 }}</div><div class="lbl">विवाह दाखला</div></div>
+            <div class="dakhle-card"><div class="num">{{ vitarit_dakhle.rahivashi_dakhale|default:0 }}</div><div class="lbl">रहिवासी दाखला</div></div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- नवीन सूचना -->
+{% if announcements %}
+<div class="section-padding bg-gray-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <p class="section-eyebrow">नवीन सूचना</p>
+            <h2 class="section-title">नवीन सूचना आणि घोषणा</h2>
+        </div>
+        <div class="row g-4">
+            {% for a in announcements %}
+            <div class="col-md-6">
+                <div class="card card-custom h-100 p-4">
+                    <span class="muted">{{ a.date|date:"d M Y" }}</span>
+                    <h6 class="fw-bold mt-2">{{ a.title }}</h6>
+                    <p class="text-secondary small">{{ a.description|truncatewords:20 }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4"><a href="{% url 'announcements' %}" class="btn btn-outline-primary-custom rounded-pill">अधिक पहा...</a></div>
+    </div>
+</div>
+{% endif %}
+
+<!-- फोटो गॅलरी -->
+{% if gallery %}
+<div class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <p class="section-eyebrow">फोटो गॅलरी</p>
+            <h2 class="section-title">गावाची झलक</h2>
+        </div>
+        <div class="row g-3">
+            {% for g in gallery %}
+            <div class="col-6 col-md-3">
+                <img src="{{ g.image_url }}" class="gallery-image rounded-3" alt="{{ g.image_title }}">
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4"><a href="{% url 'gallery' %}" class="btn btn-outline-primary-custom rounded-pill">अधिक पहा...</a></div>
+    </div>
+</div>
+{% endif %}
+
+<!-- संपर्क + तक्रार -->
+<div class="section-padding bg-gray-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <p class="section-eyebrow">संपर्क माहिती</p>
+            <h2 class="section-title">आमच्याशी संपर्क साधा</h2>
+        </div>
+        <div class="row g-4 align-items-center">
+            <div class="col-md-6">
+                <p><i class="bi bi-telephone-fill text-primary-custom me-2"></i>{{ gp.contact_no|default:"—" }}</p>
+                <p><i class="bi bi-envelope-fill text-primary-custom me-2"></i>{{ gp.email|default:"—" }}</p>
+                <p><i class="bi bi-geo-alt-fill text-primary-custom me-2"></i>ग्रामपंचायत कार्यालय, {{ gp.gram_panchayat_name }}, {{ gp.taluka }}, {{ gp.district }}</p>
+            </div>
+            <div class="col-md-6 text-center">
+                <p class="mb-3">आपली समस्या, सुझाव किंवा तक्रार आमच्यापर्यंत पोहचवा.</p>
+                <a href="{% url 'ticket' %}" class="btn btn-primary-custom btn-lg rounded-pill px-4">तक्रार नोंदवा →</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

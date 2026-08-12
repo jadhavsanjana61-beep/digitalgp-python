@@ -1,71 +1,73 @@
-<input type="checkbox" id="nav-toggle" class="nav-toggle">
-<label for="nav-toggle" class="nav-toggle-label" aria-label="मेनू उघडा">
-    <span></span><span></span><span></span>
-</label>
-<nav class="site-nav">
-    <ul class="nav-list">
-        <li><a href="{% url 'home' %}">मुख्यपृष्ठ</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+      <span class="navbar-brand-logo">{{ gp.gram_panchayat_name|slice:":2" }}</span>
+      <span>
+        <span class="navbar-brand-title d-block">{{ gp.gram_panchayat_name|default:"ग्रामपंचायत" }}</span>
+        <span class="navbar-subtitle">{{ gp.taluka }}, {{ gp.district }}</span>
+      </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-label="मेनू उघडा">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">मुख्यपृष्ठ</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'about_us' %}">आमच्याबद्दल</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">कार्यक्रम</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'awards' %}">पुरस्कार</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'announcements' %}">सूचना</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'gallery' %}">गॅलरी</a></li>
 
-        <li class="has-dropdown">
-            <details>
-                <summary>गावाची माहिती</summary>
-                <ul class="dropdown">
-                    <li><a href="{% url 'about_us' %}">आमच्याविषयी</a></li>
-                    <li><a href="{% url 'history' %}">इतिहास</a></li>
-                    <li><a href="{% url 'other_history' %}">इतर ऐतिहासिक नोंदी</a></li>
-                    <li><a href="{% url 'all_member_history' %}">सदस्य इतिहास</a></li>
-                </ul>
-            </details>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">गावाची माहिती</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'history' %}">इतिहास</a></li>
+            <li><a class="dropdown-item" href="{% url 'other_history' %}">इतर ऐतिहासिक नोंदी</a></li>
+            <li><a class="dropdown-item" href="{% url 'all_member_history' %}">सदस्य इतिहास</a></li>
+            <li><a class="dropdown-item" href="{% url 'tourist_gallery' %}">पर्यटन</a></li>
+            <li><a class="dropdown-item" href="{% url 'videos' %}">व्हिडिओ</a></li>
+            <li><a class="dropdown-item" href="{% url 'gauravshalivyakti' %}">गौरवशाली व्यक्ती</a></li>
+          </ul>
         </li>
 
-        <li class="has-dropdown">
-            <details>
-                <summary>दालन</summary>
-                <ul class="dropdown">
-                    <li><a href="{% url 'gallery' %}">छायाचित्र दालन</a></li>
-                    <li><a href="{% url 'tourist_gallery' %}">पर्यटन</a></li>
-                    <li><a href="{% url 'videos' %}">व्हिडिओ</a></li>
-                    <li><a href="{% url 'events' %}">कार्यक्रम</a></li>
-                    <li><a href="{% url 'awards' %}">पुरस्कार</a></li>
-                    <li><a href="{% url 'gauravshalivyakti' %}">गौरवशाली व्यक्ती</a></li>
-                </ul>
-            </details>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">प्रशासन</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'grampanchayat_body' %}">पदाधिकारी</a></li>
+            <li><a class="dropdown-item" href="{% url 'leadership' %}">नेतृत्व</a></li>
+            <li><a class="dropdown-item" href="{% url 'prashaskiy_adhikari' %}">प्रशासकीय अधिकारी</a></li>
+            <li><a class="dropdown-item" href="{% url 'prashaskiy_vibhag' %}">प्रशासकीय विभाग</a></li>
+            <li><a class="dropdown-item" href="{% url 'jababdari_bhumika' %}">जबाबदारी व भूमिका</a></li>
+            <li><a class="dropdown-item" href="{% url 'vibhagiya_ayukta' %}">विभागीय आयुक्त</a></li>
+          </ul>
         </li>
 
-        <li class="has-dropdown">
-            <details>
-                <summary>प्रशासन</summary>
-                <ul class="dropdown">
-                    <li><a href="{% url 'grampanchayat_body' %}">पदाधिकारी</a></li>
-                    <li><a href="{% url 'leadership' %}">नेतृत्व</a></li>
-                    <li><a href="{% url 'prashaskiy_adhikari' %}">प्रशासकीय अधिकारी</a></li>
-                    <li><a href="{% url 'prashaskiy_vibhag' %}">प्रशासकीय विभाग</a></li>
-                    <li><a href="{% url 'jababdari_bhumika' %}">जबाबदारी व भूमिका</a></li>
-                    <li><a href="{% url 'vibhagiya_ayukta' %}">विभागीय आयुक्त</a></li>
-                </ul>
-            </details>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">सेवा व माहिती</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'jama_kharch' %}">जमा-खर्च पत्रक</a></li>
+            <li><a class="dropdown-item" href="{% url 'mahiti_adhikar' %}">माहिती अधिकार</a></li>
+            <li><a class="dropdown-item" href="{% url 'yojana' %}">शासकीय योजना</a></li>
+            <li><a class="dropdown-item" href="{% url 'shasan_nirnay' %}">शासन निर्णय</a></li>
+            <li><a class="dropdown-item" href="{% url 'swachh_bharat' %}">स्वच्छ भारत मिशन</a></li>
+            <li><a class="dropdown-item" href="{% url 'panchayat_raj_mission' %}">पंचायत राज मिशन</a></li>
+            <li><a class="dropdown-item" href="{% url 'gram_vikas_kame' %}">ग्रामविकास कामे</a></li>
+            <li><a class="dropdown-item" href="{% url 'village_schools' %}">शाळा</a></li>
+            <li><a class="dropdown-item" href="{% url 'vitarit_dakhle' %}">वितरित दाखले</a></li>
+            <li><a class="dropdown-item" href="{% url 'upi_details' %}">कर भरणा (UPI)</a></li>
+            <li><a class="dropdown-item" href="{% url 'aptkalin_contact' %}">आपत्कालीन संपर्क</a></li>
+          </ul>
         </li>
 
-        <li class="has-dropdown">
-            <details>
-                <summary>सेवा व माहिती</summary>
-                <ul class="dropdown">
-                    <li><a href="{% url 'announcements' %}">घोषणा</a></li>
-                    <li><a href="{% url 'jama_kharch' %}">जमा-खर्च</a></li>
-                    <li><a href="{% url 'mahiti_adhikar' %}">माहिती अधिकार</a></li>
-                    <li><a href="{% url 'yojana' %}">योजना</a></li>
-                    <li><a href="{% url 'shasan_nirnay' %}">शासन निर्णय</a></li>
-                    <li><a href="{% url 'swachh_bharat' %}">स्वच्छ भारत मिशन</a></li>
-                    <li><a href="{% url 'panchayat_raj_mission' %}">पंचायत राज मिशन</a></li>
-                    <li><a href="{% url 'gram_vikas_kame' %}">ग्रामविकास कामे</a></li>
-                    <li><a href="{% url 'village_schools' %}">शाळा</a></li>
-                    <li><a href="{% url 'vitarit_dakhle' %}">वितरित दाखले</a></li>
-                    <li><a href="{% url 'upi_details' %}">कर भरणा (UPI)</a></li>
-                    <li><a href="{% url 'aptkalin_contact' %}">आपत्कालीन संपर्क</a></li>
-                </ul>
-            </details>
-        </li>
+        <li class="nav-item"><a class="nav-link nav-cta-btn" href="{% url 'ticket' %}">तक्रार नोंदवा</a></li>
 
-        <li><a href="{% url 'ticket' %}" class="nav-cta">तक्रार नोंदणी</a></li>
-    </ul>
+        {% if request.user.is_authenticated %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2"></i> डॅशबोर्ड</a></li>
+        {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'gp_login' %}"><i class="bi bi-box-arrow-in-right"></i> लॉगिन</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
 </nav>

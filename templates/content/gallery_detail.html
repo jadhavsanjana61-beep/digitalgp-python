@@ -1,16 +1,20 @@
 {% extends base_template %}
 {% block content %}
-<div class="page-header"><h2>{{ page_title }}</h2></div>
-<div class="card">
-    {% if subtitle %}<p class="muted">{{ subtitle }}</p>{% endif %}
-    {% if description %}<p>{{ description }}</p>{% endif %}
+<div class="container py-4">
+    <div class="page-header"><h2>{{ page_title }}</h2></div>
+    <div class="card card-custom p-4 mb-4">
+        {% if subtitle %}<p class="muted">{{ subtitle }}</p>{% endif %}
+        {% if description %}<p class="mb-0">{{ description }}</p>{% endif %}
+    </div>
+    {% if images %}
+    <div class="row g-3">
+        {% for img in images %}
+        <div class="col-6 col-md-3">
+            <img src="{{ img }}" class="gallery-image rounded-3" alt="">
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <p class="mt-4"><a class="btn btn-outline-primary-custom rounded-pill" href="{{ back_link }}">← यादीवर परत जा</a></p>
 </div>
-{% if images %}
-<div class="grid">
-    {% for img in images %}
-    <div class="card"><img src="{{ img }}" alt=""></div>
-    {% endfor %}
-</div>
-{% endif %}
-<p><a class="btn" href="{{ back_link }}">← यादीवर परत जा</a></p>
 {% endblock %}

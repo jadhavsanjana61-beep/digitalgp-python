@@ -1,17 +1,21 @@
 {% extends base_template %}
 {% block content %}
-<div class="page-header"><h2>प्रशासक डॅशबोर्ड</h2></div>
-<div class="card">
-    <p>स्वागत आहे, <strong>{{ request.user.username }}</strong> ({{ role }}) — {{ gp.gram_panchayat_name }}</p>
-    <a class="btn" href="/admin/" target="_blank">पूर्ण CMS (Django Admin) उघडा →</a>
-    <a class="btn" href="{% url 'gp_logout' %}" style="background:#c0392b;">लॉगआऊट</a>
-</div>
-<div class="stat-grid">
-    {% for label, value in stats %}
-    <div class="card stat-card">
-        <p class="stat-value">{{ value }}</p>
-        <p class="muted">{{ label }}</p>
+<div class="container py-4">
+    <div class="page-header"><h2>प्रशासक डॅशबोर्ड</h2></div>
+    <div class="card card-custom p-4 mb-4">
+        <p>स्वागत आहे, <strong>{{ request.user.username }}</strong> ({{ role }}) — {{ gp.gram_panchayat_name }}</p>
+        <a class="btn btn-primary-custom rounded-pill me-2" href="/admin/" target="_blank">पूर्ण CMS (Django Admin) उघडा →</a>
+        <a class="btn btn-outline-danger rounded-pill" href="{% url 'gp_logout' %}">लॉगआऊट</a>
     </div>
-    {% endfor %}
+    <div class="row g-3">
+        {% for label, value in stats %}
+        <div class="col-6 col-md-3">
+            <div class="card card-custom text-center p-4 h-100">
+                <p class="fs-2 fw-bold text-primary-custom mb-1">{{ value }}</p>
+                <p class="muted mb-0">{{ label }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
