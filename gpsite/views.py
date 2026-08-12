@@ -31,10 +31,8 @@ def home_view(request):
     touching DNS or the Windows hosts file.
     """
     if request.tenant is None:
-        registrations = models.Registration.objects.filter(
-            subdomaindetail_set__isnull=False
-        ).distinct().order_by("gram_panchayat_name")
-        return render(request, "no_tenant.html", {"registrations": registrations})
+        from .marketing_views import landing_view
+        return landing_view(request)
 
     tenant = request.tenant
     suvichar = models.Suvichar.objects.filter(register=tenant).order_by("-id").first()
@@ -614,12 +612,17 @@ def gram_vikas_kame_detail_view(request, pk):
 
 def gp_login_view(request):
     """
-    Tenant-aware admin login. Credentials are checked entirely by Django's
-    built-in auth (hashed passwords via authenticate()) -- there is no
-    client-side session blob and no hardcoded backdoor account like the
-    original AutoLoginHandler.razor had.
+    Admin login -- works two ways, matching how the original app's root-level
+    /Login page could authenticate a user regardless of which subdomain they
+    arrived from:
+
+    - Reached from a resolved tenant subdomain: credentials must belong to
+      THAT tenant (or be a superuser).
+    - Reached from the base/marketing domain (no tenant resolved): any valid
+      account works: the user's own tenant is looked up from their profile
+      and the dev-subdomain override is set so the rest of the session
+      resolves into their site, then they land on /dashboard/.
     """
-    _require_tenant(request)
     error = None
     if request.method == "POST":
         form = GpLoginForm(request.POST)
@@ -632,13 +635,27 @@ def gp_login_view(request):
             profile = getattr(user, "gp_profile", None) if user else None
             if user is None:
                 error = "युजरनेम किंवा पासवर्ड चुकीचा आहे."
-            elif not user.is_superuser and (profile is None or profile.register_id != request.tenant.id):
+            elif request.tenant is not None and not user.is_superuser and (
+                profile is None or profile.register_id != request.tenant.id
+            ):
                 error = "हे खाते या Gram Panchayat साठी नाही."
             else:
                 auth_login(request, user)
+                if request.tenant is None:
+                    if profile is None:
+                        # Superuser with no tenant profile logging in from the
+                        # base domain -> there's no single tenant dashboard to
+                        # send them to, so land on the platform's own GP list.
+                        return redirect("platform_gp_list")
+                    subdomain = profile.register.subdomaindetail_set.first()
+                    if subdomain:
+                        request.session["dev_subdomain"] = subdomain.subdomain
                 return redirect("dashboard")
     else:
         form = GpLoginForm()
+
+    if request.tenant is None:
+        return render(request, "marketing/login.html", {"form": form, "error": error})
     return render(request, "content/login.html", {
         "gp": request.tenant, "base_template": _base_template(request),
         "form": form, "error": error,

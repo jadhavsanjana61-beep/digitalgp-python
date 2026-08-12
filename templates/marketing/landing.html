@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DigitalGp — Village Website Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    :root { --color-primary: #4C51BF; --color-secondary: #667EEA; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; margin: 0; background: #fff; color: #1f2937; }
+    .logo-font { font-family: 'Pacifico', cursive; }
+    a { text-decoration: none; }
+
+    .navbar-marketing { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.06); z-index: 50; }
+    .navbar-marketing .wrap { max-width: 1200px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+    .btn-outline-brand { padding: 8px 18px; font-size: 0.9rem; background: #fff; color: var(--color-primary); border: 1px solid var(--color-primary); font-weight: 600; border-radius: 8px; transition: all .25s; }
+    .btn-outline-brand:hover { background: var(--color-primary); color: #fff; }
+    .btn-brand { padding: 12px 26px; background: var(--color-primary); color: #fff; font-weight: 600; border-radius: 8px; border: none; transition: all .25s; }
+    .btn-brand:hover { background: var(--color-secondary); color: #fff; }
+
+    .hero { padding: 150px 24px 100px; background: linear-gradient(135deg, #312e81 0%, #4C51BF 55%, #667EEA 100%); position: relative; overflow: hidden; color: #fff; }
+    .hero::after { content:''; position:absolute; inset:0; background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 22px 22px; opacity:.5; }
+    .hero .wrap { max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; background:rgba(255,255,255,0.12); border-radius:999px; margin-bottom:22px; font-size:0.85rem; }
+    .hero h1 { font-size: 3rem; font-weight: 700; max-width: 700px; line-height: 1.2; margin-bottom: 20px; }
+    .hero p.lead { font-size: 1.2rem; opacity: .9; max-width: 600px; margin-bottom: 34px; }
+
+    .section { padding: 80px 24px; }
+    .section .wrap { max-width: 1200px; margin: 0 auto; }
+    .section-head { text-align: center; margin-bottom: 56px; }
+    .section-head h2 { font-size: 2.1rem; font-weight: 700; margin-bottom: 12px; }
+    .section-head p { color: #6b7280; font-size: 1.05rem; max-width: 620px; margin: 0 auto; }
+    .bg-light-gray { background: #f9fafb; }
+
+    .template-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
+    .template-card { background: #fff; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); overflow: hidden; transition: all .3s; }
+    .template-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.14); }
+    .template-card .thumb { height: 200px; background-size: cover; background-position: top center; }
+    .template-card .body { padding: 22px; text-align: center; }
+    .template-card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; }
+    .template-card p { color: #6b7280; margin-bottom: 16px; font-size: 0.92rem; }
+    .btn-preview { display: inline-flex; align-items: center; gap: 8px; padding: 9px 22px; background: #4f46e5; color: #fff; border-radius: 8px; font-weight: 500; border: none; }
+    .btn-preview:hover { background: #4338ca; color: #fff; }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+    .feature-card { background: #f9fafb; border-radius: 12px; padding: 30px; transition: all .25s; }
+    .feature-card:hover { background: #eef2ff; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+    .feature-card i { font-size: 1.8rem; color: var(--color-primary); margin-bottom: 14px; display: block; }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { color: #6b7280; font-size: 0.92rem; margin: 0; }
+
+    .cta { background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899); color: #fff; text-align: center; padding: 90px 24px; }
+    .cta h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 14px; }
+    .cta p { font-size: 1.1rem; opacity: .92; margin-bottom: 30px; }
+    .btn-cta { display: inline-block; padding: 14px 32px; background: #fff; color: #4f46e5; font-weight: 700; border-radius: 8px; }
+    .btn-cta:hover { background: #f3f4f6; color: #4f46e5; }
+
+    .footer-marketing { text-align: center; padding: 32px 24px; color: #6b7280; border-top: 1px solid #e5e7eb; font-size: 0.9rem; }
+
+    .modal-preview .modal-dialog { max-width: 95%; height: 90vh; margin: 5vh auto; }
+    .modal-preview .modal-content { height: 100%; background: #f3f4f6; }
+    .modal-preview .modal-body { padding: 20px; }
+    .modal-preview iframe { width: 100%; height: 100%; border: none; border-radius: 8px; background: #fff; }
+
+    .form-control:focus { border-color: var(--color-primary); box-shadow: 0 0 0 0.2rem rgba(76,81,191,0.15); }
+    .success-banner { background: #ecfdf5; border: 1px solid #10b981; color: #065f46; border-radius: 10px; padding: 18px 22px; margin: 100px auto 0; max-width: 700px; }
+</style>
+</head>
+<body>
+
+<nav class="navbar-marketing">
+    <div class="wrap">
+        <a href="{% url 'landing' %}" class="logo-font fs-3" style="color: var(--color-primary);">GramLogo</a>
+        <div class="d-flex align-items-center gap-2">
+            <a href="#templates" class="btn-outline-brand">View Templates</a>
+            <a href="{% url 'gp_login' %}" class="btn-outline-brand">Login</a>
+        </div>
+    </div>
+</nav>
+
+{% if published %}
+<div class="success-banner">
+    <h5 class="mb-2">✓ {{ published.gp.gram_panchayat_name }} यशस्वीरित्या तयार झाली!</h5>
+    <p class="mb-1"><strong>Website:</strong> <a href="/?subdomain={{ published.subdomain }}" target="_blank">{{ published.subdomain }}</a></p>
+    <p class="mb-1"><strong>Admin Username:</strong> {{ published.username }}</p>
+    <p class="mb-0"><strong>Admin Password:</strong> {{ published.password }} <span class="text-danger">(फक्त आत्ताच दिसेल, नोंद करून ठेवा)</span></p>
+</div>
+{% endif %}
+
+<section class="hero">
+    <div class="wrap">
+        <div class="hero-badge"><i class="ri-sparkle-fill" style="color:#facc15;"></i> New Village Templates!</div>
+        <h1>Showcase Your Village with Pride</h1>
+        <p class="lead">Select from modern, mobile-friendly templates to highlight your Grampanchayat's culture, events, development, and leaders.</p>
+        <div class="d-flex gap-3 flex-wrap">
+            <a href="#templates" class="btn-brand d-inline-flex align-items-center gap-2">View Templates <i class="ri-arrow-right-line"></i></a>
+            <a href="#get-started" class="btn-outline-brand" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.4);">Get Started</a>
+        </div>
+    </div>
+</section>
+
+<section id="templates" class="section bg-light-gray">
+    <div class="wrap">
+        <div class="section-head">
+            <h2>Premium Village Templates</h2>
+            <p>Showcase history, programs, and leaders with our beautifully designed templates.</p>
+        </div>
+        <div class="template-grid">
+            {% for t in templates %}
+            <div class="template-card">
+                <div class="thumb" style="background-image:url('https://picsum.photos/seed/{{ t.preview_seed }}/500/350');"></div>
+                <div class="body">
+                    <h3>{{ t.name }}</h3>
+                    <p>{{ t.description }}</p>
+                    <button type="button" class="btn-preview" data-bs-toggle="modal" data-bs-target="#previewModal" data-src="/?subdomain={{ t.subdomain }}" data-name="{{ t.name }}" data-tid="{{ t.id }}">
+                        Preview {{ t.name }} <i class="ri-arrow-right-line"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="wrap">
+        <div class="section-head">
+            <h2>Why Choose Our Templates</h2>
+            <p>Built for rural identity, modern design, and ease of use</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card"><i class="ri-palette-line"></i><h3>Fully Customizable</h3><p>Edit colors, sections, images, and pages to suit your Grampanchayat.</p></div>
+            <div class="feature-card"><i class="ri-smartphone-line"></i><h3>Mobile Friendly</h3><p>Looks great on phones, tablets, and desktops across all devices.</p></div>
+            <div class="feature-card"><i class="ri-star-line"></i><h3>Trusted by Panchayats</h3><p>{{ village_count }}+ Gram Panchayats use our platform.</p></div>
+            <div class="feature-card"><i class="ri-government-line"></i><h3>E-Governance Ready</h3><p>Supports digital documents, schemes, and village-level service updates.</p></div>
+            <div class="feature-card"><i class="ri-group-line"></i><h3>Citizen Engagement</h3><p>Share events, updates, and initiatives that directly involve your residents.</p></div>
+            <div class="feature-card"><i class="ri-folder-open-line"></i><h3>Showcase Village Data</h3><p>Display important stats, member profiles, schemes, and resources clearly.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="cta" id="get-started">
+    <h2>Ready to Go Digital?</h2>
+    <p>Create a beautiful village website to highlight achievements and connect with citizens.</p>
+    <button type="button" class="btn-cta" data-bs-toggle="modal" data-bs-target="#publishModal">Get Started</button>
+</section>
+
+<footer class="footer-marketing">© {% now "Y" %} Grampanchayat Templates — DigitalGp Platform.</footer>
+
+<!-- Preview modal: live iframe of the actual selected demo village site -->
+<div class="modal fade modal-preview" id="previewModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <iframe id="previewFrame" src=""></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close Preview</button>
+        <button type="button" class="btn btn-brand" id="createSiteBtn" data-bs-toggle="modal" data-bs-target="#publishModal">Create Site with this Template</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Publish modal: "Configure Your New Site" -- the original had this exact form but its
+     submit handler was commented out in production. Here it actually works. -->
+<div class="modal fade" id="publishModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{% url 'publish_site' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Configure Your New Site</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          {% if publish_errors %}
+          <div class="alert alert-danger">
+            <ul class="mb-0">{% for e in publish_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+          </div>
+          {% endif %}
+          <input type="hidden" name="template_id" id="publishTemplateId" value="{{ reopen_template_id|default:'Template1' }}">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Gram Panchayat Name</label>
+            <input type="text" name="gram_panchayat_name" class="form-control" placeholder="e.g., Anytown Gram Panchayat" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Contact Number</label>
+            <input type="tel" name="contact_no" class="form-control" placeholder="e.g., 9876543210" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label fw-semibold">Website Address (Subdomain)</label>
+            <div class="input-group">
+                <input type="text" name="subdomain_part" class="form-control" placeholder="e.g., my-village">
+                <span class="input-group-text">.digitalgp.in</span>
+            </div>
+            <p class="text-muted small mt-1 mb-0">Your site will be live at: your-chosen-name.digitalgp.in</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-brand">Publish Site</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById('previewModal').addEventListener('show.bs.modal', function (event) {
+    var btn = event.relatedTarget;
+    document.getElementById('previewFrame').src = btn.getAttribute('data-src');
+    document.getElementById('previewModalLabel').textContent = 'Preview: ' + btn.getAttribute('data-name');
+    document.getElementById('publishTemplateId').value = btn.getAttribute('data-tid');
+});
+{% if publish_errors %}
+document.addEventListener('DOMContentLoaded', function () {
+    new bootstrap.Modal(document.getElementById('publishModal')).show();
+});
+{% endif %}
+</script>
+</body>
+</html>

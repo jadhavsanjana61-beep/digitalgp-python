@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login — DigitalGp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root { --color-primary: #4C51BF; --color-secondary: #667EEA; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #312e81 0%, #4C51BF 55%, #667EEA 100%); }
+    .logo-font { font-family: 'Pacifico', cursive; }
+    .card { background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); padding: 40px; width: 100%; max-width: 400px; }
+    .card a.logo { display: block; text-align: center; font-size: 1.8rem; color: var(--color-primary); margin-bottom: 6px; }
+    .card h2 { text-align: center; font-size: 1.3rem; margin: 0 0 26px; color: #1f2937; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; color: #374151; }
+    input[type=text], input[type=password] { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; margin-bottom: 16px; }
+    input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(76,81,191,0.15); }
+    button { width: 100%; padding: 12px; background: var(--color-primary); color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; }
+    button:hover { background: var(--color-secondary); }
+    .error { background: #fef2f2; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 16px; }
+    .back-link { display: block; text-align: center; margin-top: 18px; color: #6b7280; font-size: 0.88rem; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="card">
+    <a href="{% url 'landing' %}" class="logo logo-font">GramLogo</a>
+    <h2>तुमच्या अकाऊंट मध्ये लॉगिन करा</h2>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p style="color:#b91c1c;font-size:0.82rem;margin-top:-10px;">{{ field.errors|striptags }}</p>{% endif %}
+        {% endfor %}
+        <button type="submit">लॉगिन</button>
+    </form>
+    <a href="{% url 'landing' %}" class="back-link">← मुख्यपानावर परत जा</a>
+</div>
+</body>
+</html>
