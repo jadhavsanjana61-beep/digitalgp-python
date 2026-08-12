@@ -1,0 +1,32 @@
+<footer class="site-footer">
+    <div class="footer-grid">
+        <div>
+            <h4>{{ gp.gram_panchayat_name|default:"ग्रामपंचायत" }}</h4>
+            <p class="muted">{{ gp.taluka }}, {{ gp.district }}</p>
+            {% if gp.instagram or gp.facebook %}
+            <p class="footer-social">
+                {% if gp.facebook %}<a href="{{ gp.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
+                {% if gp.instagram %}<a href="{{ gp.instagram }}" target="_blank" rel="noopener">Instagram</a>{% endif %}
+            </p>
+            {% endif %}
+        </div>
+        <div>
+            <h4>संपर्क</h4>
+            <p class="muted">{{ gp.contact_no|default:"—" }}</p>
+            <p class="muted">{{ gp.email|default:"—" }}</p>
+        </div>
+        <div>
+            <h4>प्रशासक</h4>
+            {% if request.user.is_authenticated %}
+            <p><a href="{% url 'dashboard' %}">डॅशबोर्ड</a></p>
+            <p><a href="{% url 'gp_logout' %}">लॉगआऊट</a></p>
+            {% else %}
+            <p><a href="{% url 'gp_login' %}">प्रशासक लॉगिन</a></p>
+            {% endif %}
+            <p><a href="/switch-tenant/">← दुसरी Gram Panchayat निवडा</a></p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        © {% now "Y" %} {{ gp.gram_panchayat_name|default:"ग्रामपंचायत" }} — DigitalGp Platform वर तयार
+    </div>
+</footer>

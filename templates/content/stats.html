@@ -1,0 +1,16 @@
+{% extends base_template %}
+{% block content %}
+<div class="page-header"><h2>{{ page_title }}</h2></div>
+{% if stats %}
+<div class="stat-grid">
+    {% for label, value in stats %}
+    <div class="card stat-card">
+        <p class="stat-value">{{ value|default:0 }}</p>
+        <p class="muted">{{ label }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card"><p class="muted">सध्या इथे काहीही नाही.</p></div>
+{% endif %}
+{% endblock %}

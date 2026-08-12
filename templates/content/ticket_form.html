@@ -1,0 +1,22 @@
+{% extends base_template %}
+{% block content %}
+<div class="page-header"><h2>तक्रार / सूचना नोंदणी</h2></div>
+<div class="card narrow-card" style="max-width:520px;">
+    {% if submitted %}
+    <p style="color:#2e7d32;font-weight:bold;">✓ तुमची तक्रार यशस्वीरित्या नोंदवली गेली आहे. लवकरच संपर्क साधला जाईल.</p>
+    <a class="btn" href="{% url 'ticket' %}">आणखी एक तक्रार नोंदवा</a>
+    {% else %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+        <div style="margin-bottom:14px;">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<p style="color:#c0392b;font-size:0.85rem;">{{ field.errors|striptags }}</p>{% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn" type="submit" style="width:100%;">तक्रार सबमिट करा</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

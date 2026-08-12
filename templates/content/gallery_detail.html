@@ -1,0 +1,16 @@
+{% extends base_template %}
+{% block content %}
+<div class="page-header"><h2>{{ page_title }}</h2></div>
+<div class="card">
+    {% if subtitle %}<p class="muted">{{ subtitle }}</p>{% endif %}
+    {% if description %}<p>{{ description }}</p>{% endif %}
+</div>
+{% if images %}
+<div class="grid">
+    {% for img in images %}
+    <div class="card"><img src="{{ img }}" alt=""></div>
+    {% endfor %}
+</div>
+{% endif %}
+<p><a class="btn" href="{{ back_link }}">← यादीवर परत जा</a></p>
+{% endblock %}

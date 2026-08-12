@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Platform{% endblock %} — DigitalGp</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #eef1f5; color: #222; }
+        header { background: #1a237e; color: white; padding: 18px 24px; }
+        header a { color: white; text-decoration: none; margin-right: 18px; }
+        main { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        input[type=text], input[type=email], select { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+        label { display: block; margin-bottom: 4px; font-weight: bold; }
+        .btn { display: inline-block; background: #1a237e; color: white; padding: 8px 18px; border-radius: 6px; text-decoration: none; border: none; cursor: pointer; font-size: 0.95rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
+        .success { background: #e8f5e9; border: 1px solid #4caf50; padding: 16px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'platform_gp_list' %}">🏛️ Platform — सर्व गावे</a>
+        <a href="{% url 'platform_register_gp' %}">+ नवीन Gram Panchayat</a>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

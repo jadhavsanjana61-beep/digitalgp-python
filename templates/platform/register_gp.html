@@ -1,0 +1,30 @@
+{% extends "platform/_base.html" %}
+{% block title %}नवीन Gram Panchayat नोंदणी{% endblock %}
+{% block content %}
+<h2>नवीन Gram Panchayat नोंदणी</h2>
+
+{% if created %}
+<div class="success">
+    <h3>✓ {{ created.gp.gram_panchayat_name }} यशस्वीरित्या नोंदवली गेली!</h3>
+    <p><strong>Subdomain:</strong> {{ created.subdomain }} (लोकल टेस्टिंगसाठी: <a href="/?subdomain={{ created.subdomain }}">इथे भेट द्या</a>)</p>
+    <p><strong>Admin Username:</strong> {{ created.username }}</p>
+    <p><strong>Admin Password:</strong> {{ created.password }}</p>
+    <p style="color:#c0392b;">हा पासवर्ड फक्त आत्ताच दिसेल — नोंद करून ठेवा.</p>
+</div>
+{% endif %}
+
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div style="margin-bottom:14px;">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<p style="color:#777;font-size:0.85rem;margin:4px 0 0;">{{ field.help_text }}</p>{% endif %}
+            {% if field.errors %}<p style="color:#c0392b;font-size:0.85rem;">{{ field.errors|striptags }}</p>{% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn" type="submit">नोंदणी करा</button>
+    </form>
+</div>
+{% endblock %}

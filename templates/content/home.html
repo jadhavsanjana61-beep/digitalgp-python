@@ -1,0 +1,71 @@
+{% extends base_template %}
+{% block content %}
+
+{% with first_slide=slides.0 %}
+{% if first_slide and first_slide.content_type == "video" and first_slide.video_url %}
+<div class="hero">
+    <video src="{{ first_slide.video_url }}" autoplay muted loop playsinline></video>
+    <div class="hero-overlay">
+        <h2>{{ gp.gram_panchayat_name }}</h2>
+        <p>{{ gp.taluka }}, {{ gp.district }}</p>
+    </div>
+</div>
+{% elif first_slide and first_slide.image_url %}
+<div class="hero">
+    <img src="{{ first_slide.image_url }}" alt="{{ gp.gram_panchayat_name }}">
+    <div class="hero-overlay">
+        <h2>{{ gp.gram_panchayat_name }}</h2>
+        <p>{{ gp.taluka }}, {{ gp.district }}</p>
+    </div>
+</div>
+{% else %}
+<div class="hero-fallback">
+    <div>
+        <h2>{{ gp.gram_panchayat_name|default:"ग्रामपंचायत" }} मध्ये आपले स्वागत आहे</h2>
+        <p>{{ gp.taluka }}, {{ gp.district }}</p>
+    </div>
+</div>
+{% endif %}
+{% endwith %}
+
+{% if slides|length > 1 %}
+<div class="grid" style="margin-bottom:20px;">
+    {% for slide in slides|slice:"1:" %}
+        {% if slide.content_type == "video" and slide.video_url %}
+        <div class="card"><video src="{{ slide.video_url }}" controls style="width:100%;aspect-ratio:4/3;"></video></div>
+        {% elif slide.image_url %}
+        <div class="card"><img src="{{ slide.image_url }}" alt="{{ slide.image_name }}"></div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="quick-stats">
+    <span class="pill">लोकसंख्या: {{ gp.population|default:"—" }}</span>
+    <span class="pill">स्थापना वर्ष: {{ gp.establish_year|default:"—" }}</span>
+    {% if gp.ward_count %}<span class="pill">वॉर्ड: {{ gp.ward_count }}</span>{% endif %}
+</div>
+
+<div class="two-col">
+    <div class="card">
+        <h3 style="margin-top:0;">स्वागत आहे</h3>
+        <p>ही {{ gp.gram_panchayat_name|default:"या ग्रामपंचायती" }}ची अधिकृत वेबसाईट आहे — गावाची माहिती, घोषणा, योजना आणि सेवा एकाच ठिकाणी.</p>
+        {% if suvichar %}
+        <p class="muted" style="margin-top:16px;">आजचा सुविचार</p>
+        <p><em>{{ suvichar.suvichar }}</em></p>
+        {% endif %}
+    </div>
+
+    {% if announcements %}
+    <div class="card">
+        <h4 style="margin-top:0;">ताज्या घोषणा</h4>
+        <ul style="padding-left:18px;margin:0 0 14px;">
+            {% for a in announcements %}
+            <li style="margin-bottom:8px;">{{ a.title }}<br><span class="muted">{{ a.date|date:"d M Y" }}</span></li>
+            {% endfor %}
+        </ul>
+        <a class="btn" href="{% url 'announcements' %}">सर्व घोषणा बघा →</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

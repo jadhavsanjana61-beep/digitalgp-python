@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ gp.gram_panchayat_name }}{% endblock %} — Gram Panchayat</title>
+    {% include "partials/_shared_styles.html" %}
+    <style>
+        :root {
+            --accent: #1b5e20; --accent2: #2e7d32; --accent-dark: #103314;
+            --bg: #f3f7f3; --card-bg: #ffffff; --text: #1b241c;
+            --nav-bg: #14401a; --dropdown-bg: #ffffff; --dropdown-text: #1b241c; --dropdown-hover: #e8f2e8;
+            --footer-bg: #103314; --footer-text: #d9e9db;
+        }
+        body { font-family: 'Segoe UI', Verdana, sans-serif; background: var(--bg); color: var(--text); }
+        header { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; padding: 18px 0; }
+        .header-actions a { color: white; }
+        .header-actions a:hover { background: rgba(255,255,255,0.15); }
+        .site-nav { background: var(--nav-bg); }
+        .nav-list > li > a, .nav-list summary { color: #eef5ef; }
+        .nav-list > li > a:hover, .nav-list summary:hover { background: rgba(255,255,255,0.12); }
+        .dropdown { background: var(--dropdown-bg); }
+        .dropdown li a { color: var(--dropdown-text); }
+        .dropdown li a:hover { background: var(--dropdown-hover); }
+        .nav-cta { background: #ffca28; color: #3e2a00 !important; }
+        .nav-toggle-label { color: white; }
+
+        .hero-fallback { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+        .quick-stats .pill { background: #e8f2e8; color: var(--accent-dark); font-weight: 600; }
+
+        .card { background: var(--card-bg); box-shadow: 0 2px 10px rgba(20,64,26,0.08); }
+        .card:hover { box-shadow: 0 6px 18px rgba(20,64,26,0.14); }
+        .page-header { border-bottom: 3px solid var(--accent2); }
+        .page-header h2 { color: var(--accent-dark); }
+        .btn { background: var(--accent); color: white; border: none; cursor: pointer; }
+        input, textarea, select { border: 1px solid #c8d8c9; }
+
+        .site-footer { background: var(--footer-bg); color: var(--footer-text); }
+        .site-footer .muted { color: #b7ceb9; }
+        .site-footer a { color: #d9e9db; }
+        .footer-bottom { background: var(--accent-dark); color: #b7ceb9; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-titles">
+                <h1>{{ gp.gram_panchayat_name|default:"ग्रामपंचायत" }}</h1>
+                <p>{{ gp.taluka }}, {{ gp.district }} · अधिकृत संकेतस्थळ</p>
+            </div>
+            <div class="header-actions">
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'dashboard' %}">डॅशबोर्ड →</a>
+                {% else %}
+                <a href="{% url 'gp_login' %}">प्रशासक लॉगिन</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    {% include "partials/_nav.html" %}
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    {% include "partials/_footer.html" %}
+    {% include "partials/_nav_script.html" %}
+</body>
+</html>

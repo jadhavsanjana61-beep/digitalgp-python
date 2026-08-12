@@ -1,0 +1,27 @@
+{% extends "platform/_base.html" %}
+{% block title %}सर्व Gram Panchayats{% endblock %}
+{% block content %}
+<h2>सर्व नोंदणीकृत Gram Panchayats ({{ registrations|length }})</h2>
+<div class="card">
+    <table>
+        <thead>
+            <tr><th>नाव</th><th>तालुका / जिल्हा</th><th>Template</th><th>Subdomain</th><th></th></tr>
+        </thead>
+        <tbody>
+            {% for gp in registrations %}
+            <tr>
+                <td>{{ gp.gram_panchayat_name }}</td>
+                <td>{{ gp.taluka }}, {{ gp.district }}</td>
+                <td>{{ gp.template }}</td>
+                <td>{{ gp.subdomaindetail_set.first.subdomain|default:"—" }}</td>
+                <td>
+                    {% if gp.subdomaindetail_set.first %}
+                    <a href="/?subdomain={{ gp.subdomaindetail_set.first.subdomain }}">भेट द्या →</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

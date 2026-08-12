@@ -1,0 +1,17 @@
+{% extends base_template %}
+{% block content %}
+<div class="page-header"><h2>प्रशासक डॅशबोर्ड</h2></div>
+<div class="card">
+    <p>स्वागत आहे, <strong>{{ request.user.username }}</strong> ({{ role }}) — {{ gp.gram_panchayat_name }}</p>
+    <a class="btn" href="/admin/" target="_blank">पूर्ण CMS (Django Admin) उघडा →</a>
+    <a class="btn" href="{% url 'gp_logout' %}" style="background:#c0392b;">लॉगआऊट</a>
+</div>
+<div class="stat-grid">
+    {% for label, value in stats %}
+    <div class="card stat-card">
+        <p class="stat-value">{{ value }}</p>
+        <p class="muted">{{ label }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
